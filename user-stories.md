@@ -16,3 +16,4 @@ This
 #Purchase/Add to cart
 - As a user, I can purchase one or more pieces of one or more products.
 - As a user, I can view my cart from anywhere in the app with at most 2 taps.
+- As a user, I can remove items from the cart and edit quantities of items.
