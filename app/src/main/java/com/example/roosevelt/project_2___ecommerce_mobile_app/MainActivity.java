@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     FoodDBHelper mFoodDBHelper;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,23 @@ public class MainActivity extends AppCompatActivity {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.trim().equals("")){
+
+                    Intent intent = new Intent(Intent.ACTION_SEARCH);
+                    intent.putExtra(SearchManager.QUERY, "");
+                    onNewIntent(intent);
+                }
+                return false;
+            }
+        });
         ComponentName componentName = new ComponentName(this, this.getClass());
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));

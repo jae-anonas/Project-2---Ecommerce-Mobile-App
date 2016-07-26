@@ -30,6 +30,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/shopping_basket"
-        android:background="@color/colorPrimaryDark"/>
+        android:background="@color/colorPrimaryDark"
+        app:layout_behavior="com.example.roosevelt.project_2___ecommerce_mobile_app.ScrollAwareFABBehavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

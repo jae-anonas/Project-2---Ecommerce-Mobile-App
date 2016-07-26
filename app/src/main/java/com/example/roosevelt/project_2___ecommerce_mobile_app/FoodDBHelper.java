@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -118,6 +119,7 @@ public class FoodDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COL_NAME_FOOD, food.getName());
         values.put(COL_CATEGORY_FOOD, food.getCategory());
+        values.put(COL_DESCRIPTION_FOOD, food.getDesc());
         values.put(COL_COUNT_FOOD, food.getCount());
         values.put(COL_TAGS_FOOD, food.getTags());
         values.put(COL_IMG_RES_ID_FOOD, food.getImgResId());
@@ -242,6 +244,7 @@ public class FoodDBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(COL_TAGS_FOOD)),
                     cursor.getInt(cursor.getColumnIndex(COL_PRICE_FOOD))
             );
+            Log.i("iiiiiiiiii", "some text"+cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION_FOOD)));
         }
 
         return food;
