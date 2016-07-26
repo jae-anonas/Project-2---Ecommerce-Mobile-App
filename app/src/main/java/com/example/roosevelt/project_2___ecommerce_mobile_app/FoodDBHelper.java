@@ -190,14 +190,22 @@ public class FoodDBHelper extends SQLiteOpenHelper {
     //TODO method for retrieving all food products searched with a keyword/tag
     public Cursor getFoodBySearch(String search){
         SQLiteDatabase db = getReadableDatabase();
+        String selection =
+                COL_NAME_FOOD + " LIKE ? OR " +
+                        COL_DESCRIPTION_FOOD + " LIKE ? OR " +
+                        COL_TAGS_FOOD + " LIKE ? ";
+//        String selection = COL_TAGS_FOOD + " LIKE ? ";
+        String[] selectionArgs = new String[]{"%" + search + "%",
+                "%" + search + "%", "%" + search + "%"};
+//        String[] selectionArgs = new String[]{"%" + search + "%"};
 
-        Cursor cursor = db.query(
+        Cursor cursor;
+
+        cursor = db.query(
                 FOOD_TABLE_NAME,   //table name
                 COLS_FOOD_BASIC_INFO,   //String[] projection
-                COL_NAME_FOOD + " LIKE '%?%' OR " +
-                        COL_DESCRIPTION_FOOD + " LIKE '%?%' OR  " +
-                        COL_TAGS_FOOD + " LIKE '%?%' ", //String selection with " = ? " or " LIKE ? "
-                new String[]{search, search, search},   //String[] selection
+                selection,      //String selection
+                selectionArgs,   //String[] selectionArgs
                 null,   //String groupBy
                 null,   //String having
                 null    //String orderBy
