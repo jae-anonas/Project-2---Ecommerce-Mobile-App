@@ -1,5 +1,7 @@
 package com.example.roosevelt.project_2___ecommerce_mobile_app;
 
+import android.database.Cursor;
+
 /**
  * Created by roosevelt on 7/23/16.
  */
@@ -82,4 +84,26 @@ public class Food {
     public void setPrice(int price) {
         this.price = price;
     }
+
+    //TODO return a food object from cursor
+//    public static Food getObjectFromCursor(Cursor cursor){
+//        /**
+//         *
+//         this.id = id;
+//         this.count = count;
+//         this.imgResId = imgResId;
+//         this.name = name;
+//         this.desc = desc;
+//         this.category = category;
+//         this.tags = tags;
+//         this.price = price;
+//         *
+//         * */
+//        Food food = new Food(
+//                cursor.getInt(cursor)
+//        );
+//
+//        return food;
+//
+//    }
 }

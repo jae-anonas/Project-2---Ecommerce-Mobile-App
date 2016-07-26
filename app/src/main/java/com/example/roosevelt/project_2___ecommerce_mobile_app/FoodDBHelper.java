@@ -58,7 +58,7 @@ public class FoodDBHelper extends SQLiteOpenHelper {
             COL_PRICE_FOOD + " INT " +
             ")";
 
-    private static final String[] COLS_FOOD_BASIC_INFO = {COL_ID_FOOD, COL_NAME_FOOD, COL_PRICE_FOOD};
+    private static final String[] COLS_FOOD_BASIC_INFO = {COL_ID_FOOD, COL_NAME_FOOD, COL_PRICE_FOOD, COL_IMG_RES_ID_FOOD};
 
     private static final String CREATE_USER_TABLE = "CREATE TABLE " + USER_TABLE_NAME + " (" +
             COL_ID_USER + " INTEGER PRIMARY KEY, " +
@@ -88,7 +88,7 @@ public class FoodDBHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    public FoodDBHelper getInstance(Context context){
+    public static FoodDBHelper getInstance(Context context){
         if (sInstance == null)
             sInstance = new FoodDBHelper(context);
         return sInstance;
@@ -121,6 +121,7 @@ public class FoodDBHelper extends SQLiteOpenHelper {
         values.put(COL_COUNT_FOOD, food.getCount());
         values.put(COL_TAGS_FOOD, food.getTags());
         values.put(COL_IMG_RES_ID_FOOD, food.getImgResId());
+        values.put(COL_PRICE_FOOD, food.getPrice());
 
         SQLiteDatabase db = getWritableDatabase();
         db.insertOrThrow(FOOD_TABLE_NAME, null, values);
