@@ -154,30 +154,37 @@
         android:elevation="5dp"
         android:layout_alignParentBottom="true">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/lblQuantityInCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/lbl_quantity_item_in_basket"/>
+            <TextView
+                android:id="@+id/txtQuantityInBasket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/lblQuantityInCart"
+                android:layout_toEndOf="@id/lblQuantityInCart"
+                android:text="0"
+                android:textColor="@color/colorPrimaryDark"
+                />
             <ImageView
                 android:id="@+id/imgBtnAddToCart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/add_to_shopping_basket"
-                android:layout_gravity="end"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:paddingRight="15dp"
                 />
 
-        </FrameLayout>
+        </RelativeLayout>
 
-        <!--<TextView-->
-            <!--android:id="@+id/btnAddToCart"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:text="ADD TO BASKET"-->
-            <!--android:textColor="@android:color/white"-->
-            <!--android:textSize="15sp"-->
-            <!--android:textStyle="bold"-->
-            <!--android:gravity="center"-->
-            <!--android:padding="2dp"/>-->
 
         </android.support.v7.widget.Toolbar>
 

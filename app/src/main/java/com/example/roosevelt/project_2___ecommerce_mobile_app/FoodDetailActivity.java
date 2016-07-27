@@ -4,21 +4,30 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.widget.Toast;
 
 public class FoodDetailActivity extends AppCompatActivity {
+    Toolbar mToolbar;
     long foodId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_detail);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
         foodId = getIntent().getLongExtra(FoodDBHelper.COL_ID_FOOD, 1);
 
-//        Toast.makeText(this, String.valueOf(foodId), Toast.LENGTH_SHORT).show();
-
-
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.detail_page_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     protected void onResume() {
@@ -33,19 +42,3 @@ public class FoodDetailActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 }
-
-/**
- *
- static OnFoodSelectedListener mListener;
-
- public interface OnFoodSelectedListener {
- void onFoodSelected(long id);
- }
-
- public static FoodDetailFragment newInstance(Bundle bundle, OnFoodSelectedListener listener) {
- FoodDetailFragment fragment = new FoodDetailFragment();
- fragment.setArguments(bundle);
- mListener = listener;
- return fragment;
- }
- */

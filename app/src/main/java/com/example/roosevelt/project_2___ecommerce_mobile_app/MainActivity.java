@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //insertFoodData();
+
                 //foodListCursorAdapter.notifyDataSetChanged();
                 Snackbar.make(view, "Cursor count: " + mFoodDBHelper.getAllFoodBasicInfo().getCount(),
                         Snackbar.LENGTH_LONG)
@@ -112,7 +113,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.btnGoToBasket) {
+            Intent intent = new Intent(this, BasketActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -256,6 +259,8 @@ public class MainActivity extends AppCompatActivity {
         foodDBHelper.newFood(food10);
         foodDBHelper.newFood(food11);
         foodDBHelper.newFood(food12);
+
+        foodDBHelper.newUser(Constants.user);
 
 
 

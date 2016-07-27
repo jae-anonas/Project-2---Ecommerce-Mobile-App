@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -139,20 +140,22 @@ public class FoodDBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void newFoodItem(FoodItem item) {
+    public long newFoodItem(FoodItem item) {
         Date currentDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd mmmm yyyy", Locale.ENGLISH);
 
         ContentValues values = new ContentValues();
         values.put(COL_DATE_PURCHASED_ITEM, sdf.format(currentDate));
-        values.put(COL_PURCHASED_ITEM, item.isPurchased());  //means not yet purchased
+        values.put(COL_PURCHASED_ITEM, 0);  //means not yet purchased
         values.put(COL_QUANTITY_ITEM, item.getQuantity());
         values.put(COL_FK_FOOD_ID, item.getFoodId());
         values.put(COL_FK_USER_ID, item.getUserId());
 
         SQLiteDatabase db = getWritableDatabase();
-        db.insertOrThrow(ITEM_TABLE_NAME, null, values);
+        long i = db.insertOrThrow(ITEM_TABLE_NAME, null, values);
         db.close();
+
+        return i;
     }
 
     //TODO method for retrieving all food products
@@ -251,43 +254,212 @@ public class FoodDBHelper extends SQLiteOpenHelper {
 
     }
 
+    public long insertToBasket(FoodItem item){
+        SQLiteDatabase db = getWritableDatabase();
+
+        int i = item.isPurchased() ? 1 : 0;
+
+        ContentValues values = new ContentValues();
+        values.put(COL_QUANTITY_ITEM, item.getQuantity());
+        values.put(COL_PURCHASED_ITEM, i);
+        values.put(COL_FK_USER_ID, item.getUserId());
+        values.put(COL_FK_FOOD_ID, item.getFoodId());
+
+        long itemId = db.insertOrThrow(
+                ITEM_TABLE_NAME,
+                null,
+                values);
+
+        db.close();
+
+        return itemId;
+    }
+
+    public FoodItem getBasketedFoodItemFromUser(long userId, long foodId){
+        SQLiteDatabase db = getReadableDatabase();
+        String selection = String.format(Locale.ENGLISH, "%s=? AND %s=? AND %s=?",
+                COL_FK_FOOD_ID, COL_FK_USER_ID, COL_PURCHASED_ITEM);
+        String[] selectionArgs = {String.valueOf(foodId), String.valueOf(userId), String.valueOf(0)};
+
+        Cursor cursor = db.query(
+                ITEM_TABLE_NAME,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()){
+            FoodItem foodItem = new FoodItem(
+                    cursor.getInt(cursor.getColumnIndex(COL_PURCHASED_ITEM)) >= 1,
+                    cursor.getLong(cursor.getColumnIndex(COL_ID_ITEM)),
+                    cursor.getInt(cursor.getColumnIndex(COL_QUANTITY_ITEM)),
+                    cursor.getLong(cursor.getColumnIndex(COL_FK_FOOD_ID)),
+                    cursor.getLong(cursor.getColumnIndex(COL_FK_USER_ID))
+            );
+            return foodItem;
+        }
+        else {
+            return null;
+        }
+    }
+
+    //TODO method for getting current count/quantity of an item in user's basket
+    //TODO      needs to know userId, foodId, notPurchased
+    public int getItemQuantityInBasket(FoodItem item){
+        SQLiteDatabase db = getReadableDatabase();
+
+        String selection = String.format(Locale.ENGLISH, "%s = ? AND %s = ? AND %s = ?",
+                COL_FK_FOOD_ID, COL_FK_USER_ID, COL_PURCHASED_ITEM);
+        String[] selectionArgs = new String[]{String.valueOf(item.getFoodId()),
+                String.valueOf(item.getUserId()),
+                String.valueOf(0)};
+
+        Cursor cursor = db.query(
+                ITEM_TABLE_NAME,
+                null,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        int count = 0;
+
+        if (cursor.getCount() == 1){
+            cursor.moveToFirst();
+            count = cursor.getInt(cursor.getColumnIndex(COL_QUANTITY_ITEM));
+            Log.i("iiiiiiiiiiiii", "count == " + count);
+        }
+
+//        return cursor.getInt(cursor.getColumnIndex(COL_QUANTITY_ITEM));
+        return count;
+    }
+
+    public boolean isInRecord(long userId, long foodId){
+        SQLiteDatabase db = getReadableDatabase();
+
+        String where = COL_FK_FOOD_ID + " =? AND " + COL_FK_USER_ID + " =? AND " + COL_PURCHASED_ITEM + " = ?";
+        String[] whereArgs = new String[]{String.valueOf(foodId), String.valueOf(userId), "0"};
+
+        Cursor cursor = db.query(
+                ITEM_TABLE_NAME,
+                null,
+                where,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+
+        return cursor.getCount() > 0;
+    }
+
     //TODO method for updating quantity of an item already in the list
-    public void changeQuantity(long foodId, long userId, int quantity){
+    public void changeQuantity(FoodItem item){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COL_QUANTITY_ITEM, quantity);
+        values.put(COL_QUANTITY_ITEM, 1);
 
         int i = db.update(
                 ITEM_TABLE_NAME,
                 values,
                 COL_FK_FOOD_ID + " = ? AND " +
                     COL_FK_USER_ID + " = ? AND " +
-                    COL_PURCHASED_ITEM + " = ",
-                new String[]{String.valueOf(foodId),
-                    String.valueOf(userId),
-                    String.valueOf(0)}
+                    COL_PURCHASED_ITEM + " = ?",
+                new String[]{String.valueOf(item.getFoodId()),
+                    String.valueOf(item.getUserId()),
+                    "0"}
         );
 
         if (i != -1){
             Log.i(TAG, "Item quantity update successful");
         }
+        else
+        {
+            Log.i("iiiiiiiiii", "Added Food Item");
+            newFoodItem(item);
+        }
 
         db.close();
 
     }
+
+    public Cursor getBasketItems(){
+        SQLiteDatabase db = getReadableDatabase();
+
+        return db.query(
+                ITEM_TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+    }
+
+    public void addQuantityToItemInBasket(long foodId, long userId){
+        SQLiteDatabase db = getWritableDatabase();
+
+        String query = String.format(Locale.ENGLISH, "UPDATE %s SET %s=%s+%d WHERE " +
+                "%s=%d AND %s=%d AND %s=%d",
+                ITEM_TABLE_NAME, COL_QUANTITY_ITEM, COL_QUANTITY_ITEM, 1,
+                COL_FK_USER_ID, userId, COL_FK_FOOD_ID, foodId, COL_PURCHASED_ITEM, 0);
+
+        db.execSQL(query);
+    }
+
+//    public FoodInBasket getFoodInBasketById(long foodId){
+//        SQLiteDatabase db = getReadableDatabase();
+//
+//        SQL
+//    }
+
+    public int[] getFoodDetailsById(long foodId){
+        Food food = getFoodById(foodId);
+        int[] details = {food.getImgResId(), food.getPrice()};
+        return details;
+    }
+
+//    public FoodInBasket getFoodInBasketDetails(long foodId){
+//        FoodInBasket foodInBasket = new FoodInBasket();
+//
+//        SQLiteDatabase db = getReadableDatabase();
+//        SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+//        sqLiteQueryBuilder.setTables(String.format(Locale.ENGLISH, "%s JOIN"));
+//
+//
+//        /**
+//         *
+//         int price, imgResource, quantity;
+//         String name, description;
+//
+//
+//         SQLiteDatabase db = getReadableDatabase();
+//         SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+//         sqLiteQueryBuilder.setTables(String.format(Locale.ENGLISH, "%s JOIN %s ON %s.%s=%s.%s",
+//         EMPLOYEE_TABLE_NAME, JOB_TABLE_NAME,
+//         EMPLOYEE_TABLE_NAME,COL_ID_EMP,
+//         JOB_TABLE_NAME,COL_EMP_ID));
+//         String where = COL_COMPANY + "=? ";
+//         String[] whereArgs = {"Macy's"};
+//
+//         return sqLiteQueryBuilder.query(db,
+//         null,
+//         where,
+//         whereArgs,
+//         null,
+//         null,
+//         null,
+//         null
+//         );
+//         */
+//
+//    }
+
 }
-
-
-
-/**
- Cursor cursor = db.query(
- null,   //table name
- null,   //String[] projection
- null,   //String selection with " = ? " or " LIKE ? "
- null,   //String[] selection
- null,   //String groupBy
- null,   //String having
- null    //String orderBy
- );
- */

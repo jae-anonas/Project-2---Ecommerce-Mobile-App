@@ -4,7 +4,7 @@ package com.example.roosevelt.project_2___ecommerce_mobile_app;
  * Created by roosevelt on 7/23/16.
  */
 public class User {
-    private int id;
+    private long id;
     private String name, password;
 
     public User(String name, String password) {
@@ -12,18 +12,18 @@ public class User {
         this.password = password;
     }
 
-    public User(int id, String name, String password) {
+    public User(long id, String name, String password) {
 
         this.id = id;
         this.name = name;
         this.password = password;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

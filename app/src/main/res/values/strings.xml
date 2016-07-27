@@ -5,4 +5,7 @@
     <string name="category_label">Category</string>
     <string name="description_label">Description</string>
     <string name="name_label">Name</string>
+    <string name="cart_title">Cart</string>
+    <string name="lbl_quantity_item_in_basket">Quantity of this in your basket:</string>
+    <string name="label_total">Total</string>
 </resources>

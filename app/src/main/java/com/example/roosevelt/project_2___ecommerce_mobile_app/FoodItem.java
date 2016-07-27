@@ -4,18 +4,27 @@ package com.example.roosevelt.project_2___ecommerce_mobile_app;
  * Created by roosevelt on 7/23/16.
  */
 public class FoodItem {
-    private int quantity, id, userId, foodId;
+    private int quantity;
+    long id, foodId, userId;
     private boolean purchased;
 
+    //Constructor for adding to cart
+    public FoodItem(long foodId){
+        this.quantity = 1;
+        this.userId = Constants.user.getId();
+        this.foodId = foodId;
+        this.purchased = false;
+    }
 
-    public FoodItem(boolean purchased, int id, int quantity, int foodId) {
+    public FoodItem(boolean purchased, long id, int quantity, long foodId, long userId) {
         this.purchased = purchased;
         this.id = id;
         this.quantity = quantity;
         this.foodId = foodId;
+        this.userId = userId;
     }
 
-    public FoodItem(int quantity, boolean purchased, int foodId) {
+    public FoodItem(int quantity, boolean purchased, long foodId) {
         this.quantity = quantity;
         this.purchased = purchased;
         this.foodId = foodId;
@@ -38,27 +47,27 @@ public class FoodItem {
         this.purchased = purchased;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getFoodId() {
+    public long getFoodId() {
         return foodId;
     }
 
-    public void setFoodId(int foodId) {
+    public void setFoodId(long foodId) {
         this.foodId = foodId;
     }
 }
