@@ -1,5 +1,6 @@
 package com.example.roosevelt.project_2___ecommerce_mobile_app;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,12 +14,17 @@ import java.util.List;
 public class BasketActivity extends AppCompatActivity implements View.OnClickListener{
     RecyclerView mRecyclerView;
     Button btnBack, btnCheckOut;
+    BasketListRecyclerViewAdapter adapter;
+    UserBasket basket;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basket);
         setTitle("Items in Your Basket");
+
+        basket = UserBasket.getInstance();
 
         btnBack = (Button) findViewById(R.id.btnGoBack);
         btnCheckOut = (Button) findViewById(R.id.btnCheckout);
@@ -30,7 +36,9 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        BasketListRecyclerViewAdapter adapter = new BasketListRecyclerViewAdapter(UserBasket.getInstance().mFoodItemList);
+        mRecyclerView.addOnItemTouchListener(getSwipeListener());
+
+        adapter = new BasketListRecyclerViewAdapter(basket.mFoodItemList);
         mRecyclerView.setAdapter(adapter);
 
     }
@@ -47,5 +55,70 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
                 break;
 
         }
+    }
+
+    public SwipeableRecyclerViewTouchListener getSwipeListener(){
+
+        SwipeableRecyclerViewTouchListener swipeTouchListener =
+                new SwipeableRecyclerViewTouchListener(mRecyclerView,
+                        new SwipeableRecyclerViewTouchListener.SwipeListener() {
+
+                            FoodInBasket food;
+
+                            @Override
+                            public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    food = basket.mFoodItemList.get(position);
+                                    basket.mFoodItemList.remove(position);
+                                    adapter.notifyItemRemoved(position);
+                                }
+                                adapter.notifyDataSetChanged();
+
+                                Snackbar.make(recyclerView,"Removed item from basket.", Snackbar.LENGTH_LONG).
+                                        setAction("Undo", new View.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(View v) {
+                                                basket.mFoodItemList.add(food);
+                                                adapter.notifyDataSetChanged();
+                                            }
+
+                                        }).show();
+                            }
+
+                            @Override
+                            public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+
+                                for (int position : reverseSortedPositions) {
+                                    food = basket.mFoodItemList.get(position);
+                                    basket.mFoodItemList.remove(position);
+                                    adapter.notifyItemRemoved(position);
+                                }
+                                adapter.notifyDataSetChanged();
+
+                                Snackbar.make(recyclerView,"Removed item from basket.", Snackbar.LENGTH_LONG).
+                                        setAction("Undo", new View.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(View v) {
+                                                basket.mFoodItemList.add(food);
+                                                adapter.notifyDataSetChanged();
+                                            }
+
+                                        }).show();
+                            }
+
+                            @Override
+                            public boolean canSwipeRight(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public boolean canSwipeLeft(int position) {
+                                return true;
+                            }
+                        });
+        return swipeTouchListener;
+
     }
 }
