@@ -146,7 +146,7 @@ public class FoodDBHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COL_DATE_PURCHASED_ITEM, sdf.format(currentDate));
-        values.put(COL_PURCHASED_ITEM, 0);  //means not yet purchased
+        values.put(COL_PURCHASED_ITEM, 1);  //means product(s) is already purchased
         values.put(COL_QUANTITY_ITEM, item.getQuantity());
         values.put(COL_FK_FOOD_ID, item.getFoodId());
         values.put(COL_FK_USER_ID, item.getUserId());

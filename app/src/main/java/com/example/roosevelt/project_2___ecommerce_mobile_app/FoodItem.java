@@ -24,10 +24,11 @@ public class FoodItem {
         this.userId = userId;
     }
 
-    public FoodItem(int quantity, boolean purchased, long foodId) {
+    public FoodItem(int quantity, long foodId, long userId) {
+        this.purchased = true;
         this.quantity = quantity;
-        this.purchased = purchased;
         this.foodId = foodId;
+        this.userId = userId;
     }
 
     public int getQuantity() {

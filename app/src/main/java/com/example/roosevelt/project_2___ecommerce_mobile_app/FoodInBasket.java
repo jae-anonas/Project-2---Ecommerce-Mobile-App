@@ -1,5 +1,7 @@
 package com.example.roosevelt.project_2___ecommerce_mobile_app;
 
+import android.content.ContentValues;
+
 /**
  * Created by roosevelt on 7/27/16.
  */
@@ -7,8 +9,6 @@ public class FoodInBasket extends Food{
 
     long mUserId;
     int mQuantity;
-
-    Food mFood;
 
     public FoodInBasket(Food food, int quantity, long userId) {
         super(food.getId(), food.getCount(), food.getImgResId(),food.getName(), food.getDesc(), food.getCategory(), food.getTags(), food.getPrice());
@@ -34,5 +34,14 @@ public class FoodInBasket extends Food{
 
     public void addToQuantity(){
         this.mQuantity += 1;
+    }
+
+    //TODO use this in storing to database
+    public FoodItem getAsFoodItem(){
+        return new FoodItem(
+                getQuantity(),
+                getId(),
+                getUserId()
+        );
     }
 }

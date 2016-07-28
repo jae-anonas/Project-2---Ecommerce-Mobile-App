@@ -4,10 +4,18 @@
     <item
         android:id="@+id/btnGoToBasket"
         android:icon="@drawable/shopping_basket"
-        android:title="Cast"
+        android:title="Go to basket"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/btnEditProfile"
+        android:title="Edit Profile"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/btnLogout"
+        android:title="Logout"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/btnSettings"
         android:title="Settings"
         app:showAsAction="never"/>
 </menu>

@@ -61,7 +61,7 @@ public class FoodDetailFragment extends Fragment implements View.OnClickListener
 
         Food food = dbHelper.getFoodById(foodId);
 
-        FoodItem item = dbHelper.getBasketedFoodItemFromUser(Constants.user.getId(), foodId);
+//        FoodItem item = dbHelper.getBasketedFoodItemFromUser(Constants.user.getId(), foodId);
 
         FoodInBasket foodInBasket = UserBasket.getInstance().getFoodItemInBasketListById(foodId);
 

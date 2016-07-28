@@ -17,7 +17,6 @@
             android:layout_weight="1">
             <ImageView
                 android:id="@+id/imgViewBasketItem"
-                android:src="@drawable/tomato_cheese_spinach_salad"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:adjustViewBounds="false"
