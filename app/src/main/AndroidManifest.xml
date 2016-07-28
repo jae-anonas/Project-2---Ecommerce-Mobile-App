@@ -25,7 +25,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".FoodDetailActivity"></activity>
-        <activity android:name=".BasketActivity"></activity>
+        <activity android:name=".BasketActivity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

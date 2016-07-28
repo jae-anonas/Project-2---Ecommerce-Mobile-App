@@ -40,9 +40,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //insertFoodData();
+//                if(Constants.user == null)
+//                    insertFoodData();
 
-                //foodListCursorAdapter.notifyDataSetChanged();
                 Snackbar.make(view, "Cursor count: " + mFoodDBHelper.getAllFoodBasicInfo().getCount(),
                         Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         ComponentName componentName = new ComponentName(this, this.getClass());
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
@@ -259,6 +260,10 @@ public class MainActivity extends AppCompatActivity {
         foodDBHelper.newFood(food10);
         foodDBHelper.newFood(food11);
         foodDBHelper.newFood(food12);
+
+        User user = new User(1,"jaeanonas", "1234");
+
+        Constants.user = user;
 
         foodDBHelper.newUser(Constants.user);
 

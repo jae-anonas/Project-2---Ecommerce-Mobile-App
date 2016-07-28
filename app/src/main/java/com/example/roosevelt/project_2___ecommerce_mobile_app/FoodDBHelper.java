@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -358,31 +359,50 @@ public class FoodDBHelper extends SQLiteOpenHelper {
         return cursor.getCount() > 0;
     }
 
+    public HashMap getFoodCounts(){
+        HashMap foodCounts = new HashMap();
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor = db.query(
+                FOOD_TABLE_NAME,
+                new String[]{COL_ID_FOOD, COL_COUNT_FOOD},
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        if (cursor.moveToFirst()){
+            while(!cursor.isAfterLast()){
+                long id = cursor.getLong(cursor.getColumnIndex(COL_ID_FOOD));
+                int count = cursor.getInt(cursor.getColumnIndex(COL_COUNT_FOOD));
+                foodCounts.put(id, count);
+                cursor.moveToNext();
+            }
+        }
+
+        return foodCounts;
+
+    }
+
     //TODO method for updating quantity of an item already in the list
-    public void changeQuantity(FoodItem item){
+    public void changeFoodCount(Food item, int count){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COL_QUANTITY_ITEM, 1);
+        values.put(COL_COUNT_FOOD, count);
 
         int i = db.update(
-                ITEM_TABLE_NAME,
+                FOOD_TABLE_NAME,
                 values,
-                COL_FK_FOOD_ID + " = ? AND " +
-                    COL_FK_USER_ID + " = ? AND " +
-                    COL_PURCHASED_ITEM + " = ?",
-                new String[]{String.valueOf(item.getFoodId()),
-                    String.valueOf(item.getUserId()),
-                    "0"}
+                COL_ID_FOOD + " = ?",
+                new String[]{String.valueOf(item.getId())}
+
         );
 
         if (i != -1){
             Log.i(TAG, "Item quantity update successful");
-        }
-        else
-        {
-            Log.i("iiiiiiiiii", "Added Food Item");
-            newFoodItem(item);
         }
 
         db.close();
@@ -402,6 +422,8 @@ public class FoodDBHelper extends SQLiteOpenHelper {
                 null
         );
     }
+
+
 
     public void addQuantityToItemInBasket(long foodId, long userId){
         SQLiteDatabase db = getWritableDatabase();

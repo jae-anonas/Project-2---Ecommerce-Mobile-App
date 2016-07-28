@@ -21,7 +21,6 @@ public class FoodDetailActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-
         foodId = getIntent().getLongExtra(FoodDBHelper.COL_ID_FOOD, 1);
 
     }
@@ -36,6 +35,9 @@ public class FoodDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
+            case R.id.home:
+                finish();
+                break;
             case R.id.btnGoToBasket:
                 Intent intent = new Intent(this, BasketActivity.class);
                 startActivity(intent);

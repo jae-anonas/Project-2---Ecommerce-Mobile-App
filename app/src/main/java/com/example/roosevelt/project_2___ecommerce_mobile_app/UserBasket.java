@@ -21,7 +21,9 @@ public class UserBasket {
     }
 
     public void addToBasket(FoodInBasket foodItem){
+        //if quantity is less than available items
         mFoodItemList.add(foodItem);
+        //else, show toast
     }
 
     public List<FoodInBasket> getFoodItemInBasketList(long id){
@@ -40,4 +42,15 @@ public class UserBasket {
         }
         return foodInBasket;
     }
+
+    public int getTotalBill(){
+        int total = 0;
+
+        for (FoodInBasket foodInBasket : mFoodItemList) {
+            total += foodInBasket.getQuantity() * foodInBasket.getPrice();
+        }
+
+        return total;
+    }
+
 }

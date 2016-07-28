@@ -8,4 +8,9 @@
     <string name="cart_title">Cart</string>
     <string name="lbl_quantity_item_in_basket">Quantity of this in your basket:</string>
     <string name="label_total">Total</string>
+    <string name="dialog_message_checkout">The total is: $ </string>
+    <string name="yes">Checkout</string>
+    <string name="not_yet">Back</string>
+    <string name="stock_count_label">In stock</string>
+
 </resources>

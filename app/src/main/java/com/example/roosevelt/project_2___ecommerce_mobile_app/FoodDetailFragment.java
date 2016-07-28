@@ -20,8 +20,9 @@ import java.util.List;
  */
 public class FoodDetailFragment extends Fragment implements View.OnClickListener{
     ImageView imgView, btnAddToBasket;
-    TextView txtName, txtDescription, txtCategory, txtQuantityInCart;
+    TextView txtName, txtDescription, txtCategory, txtQuantityInCart, txtStockCount;
     long foodId;
+    Food food;
 
     FoodDBHelper dbHelper;
 
@@ -42,9 +43,11 @@ public class FoodDetailFragment extends Fragment implements View.OnClickListener
         txtCategory = (TextView) view.findViewById(R.id.txtCategory);
         txtDescription = (TextView) view.findViewById(R.id.txtDescription);
         txtQuantityInCart = (TextView) view.findViewById(R.id.txtQuantityInBasket);
+        txtStockCount = (TextView) view.findViewById(R.id.txtCount);
 
         foodId = getArguments().getLong(FoodDBHelper.COL_ID_FOOD, 1);
         dbHelper = FoodDBHelper.getInstance(getActivity().getApplicationContext());
+//        Constants.foodCounts = dbHelper.getFoodCounts();
 
         return view;
     }
@@ -59,7 +62,7 @@ public class FoodDetailFragment extends Fragment implements View.OnClickListener
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Food food = dbHelper.getFoodById(foodId);
+        food = dbHelper.getFoodById(foodId);
 
 //        FoodItem item = dbHelper.getBasketedFoodItemFromUser(Constants.user.getId(), foodId);
 
@@ -69,16 +72,12 @@ public class FoodDetailFragment extends Fragment implements View.OnClickListener
         txtName.setText(food.getName());
         txtCategory.setText(food.getCategory());
         txtDescription.setText(food.getDesc());
+        txtStockCount.setText(String.valueOf(food.getCount()));
 
         if (foodInBasket != null)
             txtQuantityInCart.setText(String.valueOf(foodInBasket.getQuantity()));
         else
             txtQuantityInCart.setText(String.valueOf(0));
-
-
-//        Toast.makeText(view.getContext(), food.getDesc(), Toast.LENGTH_SHORT).show();
-
-
 
         btnAddToBasket.setOnClickListener(this);
 
@@ -99,58 +98,41 @@ public class FoodDetailFragment extends Fragment implements View.OnClickListener
 
                 Food food = dbHelper.getFoodById(foodId);
 
+
+
                 int indexInList = -1;
                 for (int i = 0; i < basketList.size(); i++) {
                     if (foodId == basketList.get(i).getId()){
                         indexInList = i;
                     }
                 }
-                FoodInBasket foodInBasket;
+                FoodInBasket foodInBasket = null;
 
                 if (indexInList < 0){
                     //not in list, add to list
-                    foodInBasket = new FoodInBasket(food, 1, Constants.user.getId());
-                    UserBasket.getInstance().addToBasket(foodInBasket);
-
+                    //if available items > 0, permit add
+                    if (food.getCount() > 0){
+                        foodInBasket = new FoodInBasket(food, 1, Constants.user.getId());
+                        UserBasket.getInstance().addToBasket(foodInBasket);
+                    }
+                    else {
+                        //TODO Toast to user that there's no more in stock
+                        Toast.makeText(getActivity(), "Sorry, there's no more of this available!",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 else {
                     foodInBasket = basketList.get(indexInList);
                     foodInBasket.addToQuantity();
                 }
-
-                txtQuantityInCart.setText(String.valueOf(foodInBasket.getQuantity()));
-
-/*
-                FoodItem item = new FoodItem(foodId);
-                if (!dbHelper.isInRecord(Constants.user.getId(), foodId)){
-                    dbHelper.newFoodItem(item);
-                    Log.i("iiiiiii", "not in record " + foodId);
-
-                }
-                else {
-                    item = dbHelper.getBasketedFoodItemFromUser(Constants.user.getId(), foodId);
-                    dbHelper.addQuantityToItemInBasket(foodId, Constants.user.getId());
-                    Log.i("iiiiiii", "In record " + foodId + " Item ID: " + item.getId() + " Count: " + item.getQuantity());
+                if (foodInBasket != null)
+                    txtQuantityInCart.setText(String.valueOf(foodInBasket.getQuantity()));
+                else{
+                    txtQuantityInCart.setText(String.valueOf(0));
                 }
 
-                String quantity = String.valueOf(item.getQuantity());
-                Log.i("iiiiiii", "Quantity: " + quantity);
-                txtQuantityInCart.setText(quantity);
-                break;
-                */
+
         }
     }
 }
-
-/**
- *
- *
- FoodItem item = new FoodItem(foodId);
- dbHelper.changeQuantity(item);
- txtQuantityInCart.setText(String.valueOf(dbHelper.getItemQuantityInBasket(item)));
- //                Toast.makeText(view.getContext(), "Added an item to cart", Toast.LENGTH_SHORT).show();
-
- Toast.makeText(view.getContext(), String.valueOf(dbHelper.getBasketItems().getCount()), Toast.LENGTH_SHORT).show();
-
- */
