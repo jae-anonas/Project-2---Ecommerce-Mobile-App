@@ -24,7 +24,6 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
     BasketListRecyclerViewAdapter adapter;
     UserBasket basket;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +53,16 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
 
         mRecyclerView.addOnItemTouchListener(getSwipeListener());
 
-        adapter = new BasketListRecyclerViewAdapter(basket.mFoodItemList);
+        adapter = new BasketListRecyclerViewAdapter(basket.mFoodItemList, this);
         mRecyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                UserBasket.getInstance().getTotalBill()));
 
     }
 
@@ -103,7 +110,12 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
                                     basket.mFoodItemList.remove(position);
                                     adapter.notifyItemRemoved(position);
                                 }
+
+                                btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                                        UserBasket.getInstance().getTotalBill()));
                                 adapter.notifyDataSetChanged();
+                                btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                                        UserBasket.getInstance().getTotalBill()));
 
                                 Snackbar.make(recyclerView,"Removed item from basket.", Snackbar.LENGTH_LONG).
                                         setAction("Undo", new View.OnClickListener() {
@@ -126,6 +138,8 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
                                     adapter.notifyItemRemoved(position);
                                 }
                                 adapter.notifyDataSetChanged();
+                                btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                                        UserBasket.getInstance().getTotalBill()));
 
                                 Snackbar.make(recyclerView,"Removed item from basket.", Snackbar.LENGTH_LONG).
                                         setAction("Undo", new View.OnClickListener() {
@@ -134,6 +148,8 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
                                             public void onClick(View v) {
                                                 basket.mFoodItemList.add(food);
                                                 adapter.notifyDataSetChanged();
+                                                btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                                                        UserBasket.getInstance().getTotalBill()));
                                             }
 
                                         }).show();
@@ -195,6 +211,8 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
                                 Toast.LENGTH_SHORT).show();
                         //TODO delete all items in the list, maybe add some animation
                         basket.mFoodItemList.clear();
+                        btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                                UserBasket.getInstance().getTotalBill()));
                         adapter.notifyDataSetChanged();
 
                     }

@@ -49,33 +49,54 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price:"/>
+                    android:text="Price:"
+                    android:textSize="20dp"/>
                 <TextView
                     android:id="@+id/txtPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"/>
+                    android:layout_gravity="end"
+                    android:textSize="20dp"/>
             </FrameLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quantity:"/>
+                    android:text="Quantity:"
+                    android:textSize="20dp"/>
                 <TextView
+                    android:id="@+id/txtBtnChangeQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="30dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_gravity="end"
-                    android:text="(tap to change)"/>
+                    android:layout_marginEnd="25dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:clickable="true"
+                    android:text="@string/tap_to_change"
+                    android:textColor="@android:color/holo_blue_light"
+                    android:background="?android:attr/selectableItemBackground"
+                    />
+                <!--<Button-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="(change)"-->
+                    <!--android:textColor="@android:color/holo_blue_light"-->
+                    <!--android:layout_marginRight="30dp"-->
+                    <!--android:layout_marginEnd="25dp"-->
+                    <!--android:layout_gravity="end|center_vertical"-->
+                    <!--android:background="?android:attr/selectableItemBackground"/>-->
+
                 <TextView
                     android:id="@+id/txtQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"/>
+                    android:layout_gravity="end"
+                    android:textSize="20dp"/>
             </FrameLayout>
 
             <FrameLayout
@@ -84,12 +105,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Subtotal"/>
+                    android:text="Subtotal"
+                    android:textSize="20dp"/>
                 <TextView
                     android:id="@+id/txtSubtotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"/>
+                    android:layout_gravity="end"
+                    android:textSize="20dp"/>
 
             </FrameLayout>
 

@@ -377,7 +377,11 @@ public class FoodDBHelper extends SQLiteOpenHelper {
             while(!cursor.isAfterLast()){
                 long id = cursor.getLong(cursor.getColumnIndex(COL_ID_FOOD));
                 int count = cursor.getInt(cursor.getColumnIndex(COL_COUNT_FOOD));
+
+
                 foodCounts.put(id, count);
+
+
                 cursor.moveToNext();
             }
         }

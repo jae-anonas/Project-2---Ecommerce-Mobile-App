@@ -12,5 +12,6 @@
     <string name="yes">Checkout</string>
     <string name="not_yet">Back</string>
     <string name="stock_count_label">In stock</string>
+    <string name="tap_to_change">(change)</string>
 
 </resources>

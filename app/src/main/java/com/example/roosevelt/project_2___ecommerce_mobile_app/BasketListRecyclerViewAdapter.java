@@ -1,9 +1,15 @@
 package com.example.roosevelt.project_2___ecommerce_mobile_app;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
@@ -11,13 +17,15 @@ import java.util.Locale;
 /**
  * Created by roosevelt on 7/27/16.
  */
-public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketListCardHolder> {
+public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketListCardHolder>{
 
+    private Context mContext;
     private List<FoodInBasket> mFoodItemList;
     FoodDBHelper dbHelper;
 
-    public BasketListRecyclerViewAdapter(List<FoodInBasket> basketList){
+    public BasketListRecyclerViewAdapter(List<FoodInBasket> basketList, Context context){
         mFoodItemList = basketList;
+        this.mContext = context;
     }
 
     @Override
@@ -31,7 +39,8 @@ public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketLi
 
     @Override
     public void onBindViewHolder(BasketListCardHolder holder, int position) {
-        FoodInBasket foodItem = mFoodItemList.get(position);
+        final FoodInBasket foodItem = mFoodItemList.get(position);
+        final int pos = position;
 
         holder.imgView.setImageResource(foodItem.getImgResId());
         holder.txtName.setText(foodItem.getName());
@@ -39,10 +48,57 @@ public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketLi
         holder.txtQuantity.setText(String.valueOf(foodItem.getQuantity()));
         holder.txtSubTotal.setText(String.format(Locale.ENGLISH, "$ %d.00",
                 (foodItem.getPrice() * foodItem.getQuantity())));
+        //TODO add onclicklistener to txtBtnChange...
+        holder.txtBtnChangeQuantity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                show(foodItem, pos);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mFoodItemList.size();
     }
+
+    public void show(final FoodInBasket food, final int position)
+    {
+        final Dialog d = new Dialog(mContext);
+        d.setTitle("NumberPicker");
+        d.setContentView(R.layout.dialog_get_quantity);
+        Button b2 = (Button) d.findViewById(R.id.btnDialogCancel);
+        Button b1 = (Button) d.findViewById(R.id.btnDialogOkay);
+        final NumberPicker np = (NumberPicker) d.findViewById(R.id.numQuantity);
+        np.setMaxValue(food.getCount()); // max value 100
+        np.setMinValue(0);   // min value 0
+        np.setWrapSelectorWheel(false);
+        np.setValue(food.getQuantity());
+//        np.setOnValueChangedListener(this);
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (np.getValue() == 0) {
+                    mFoodItemList.remove(position);
+                    notifyDataSetChanged();
+                }
+                else{
+                    mFoodItemList.get(position).setQuantity(np.getValue());
+                    notifyDataSetChanged();
+                }
+                d.dismiss();
+            }
+        });
+        b2.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                d.dismiss(); // dismiss the dialog
+            }
+        });
+        d.show();
+
+
+    }
+
 }
