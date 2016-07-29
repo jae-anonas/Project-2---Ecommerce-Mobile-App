@@ -43,9 +43,8 @@ public class MainActivity extends AppCompatActivity {
 //                if(Constants.user == null)
 //                    insertFoodData();
 
-                Snackbar.make(view, "Cursor count: " + mFoodDBHelper.getAllFoodBasicInfo().getCount(),
-                        Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, BasketActivity.class);
+                startActivity(intent);
             }
         });
     }

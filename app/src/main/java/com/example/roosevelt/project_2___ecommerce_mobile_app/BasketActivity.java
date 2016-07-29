@@ -18,7 +18,7 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
 
-public class BasketActivity extends AppCompatActivity implements View.OnClickListener{
+public class BasketActivity extends AppCompatActivity implements View.OnClickListener, BasketListRecyclerViewAdapter.OnChangeQuantityListener{
     RecyclerView mRecyclerView;
     Button btnBack, btnCheckOut;
     BasketListRecyclerViewAdapter adapter;
@@ -53,7 +53,7 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
 
         mRecyclerView.addOnItemTouchListener(getSwipeListener());
 
-        adapter = new BasketListRecyclerViewAdapter(basket.mFoodItemList, this);
+        adapter = new BasketListRecyclerViewAdapter(basket.mFoodItemList, this, this);
         mRecyclerView.setAdapter(adapter);
 
     }
@@ -166,6 +166,13 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
                             }
                         });
         return swipeTouchListener;
+
+    }
+
+    @Override
+    public void onChangeQuantity(int total) {
+        btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                total));
 
     }
 

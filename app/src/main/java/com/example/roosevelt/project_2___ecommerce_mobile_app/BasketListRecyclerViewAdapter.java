@@ -2,14 +2,12 @@ package com.example.roosevelt.project_2___ecommerce_mobile_app;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.NumberPicker;
-import android.widget.Toast;
 
 import java.util.List;
 import java.util.Locale;
@@ -22,10 +20,16 @@ public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketLi
     private Context mContext;
     private List<FoodInBasket> mFoodItemList;
     FoodDBHelper dbHelper;
+    private OnChangeQuantityListener mListener;
 
-    public BasketListRecyclerViewAdapter(List<FoodInBasket> basketList, Context context){
+    public interface OnChangeQuantityListener{
+        void onChangeQuantity(int total);
+    }
+
+    public BasketListRecyclerViewAdapter(List<FoodInBasket> basketList, Context context, OnChangeQuantityListener listener){
         mFoodItemList = basketList;
         this.mContext = context;
+        this.mListener = listener;
     }
 
     @Override
@@ -86,6 +90,7 @@ public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketLi
                     mFoodItemList.get(position).setQuantity(np.getValue());
                     notifyDataSetChanged();
                 }
+                mListener.onChangeQuantity(UserBasket.getInstance().getTotalBill());
                 d.dismiss();
             }
         });
