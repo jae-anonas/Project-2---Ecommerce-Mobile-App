@@ -22,6 +22,10 @@ public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketLi
     FoodDBHelper dbHelper;
     private OnChangeQuantityListener mListener;
 
+    public void setFoodItemList(List<FoodInBasket> mFoodItemList) {
+        this.mFoodItemList = mFoodItemList;
+    }
+
     public interface OnChangeQuantityListener{
         void onChangeQuantity(int total);
     }
@@ -69,7 +73,7 @@ public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketLi
     public void show(final FoodInBasket food, final int position)
     {
         final Dialog d = new Dialog(mContext);
-        d.setTitle("NumberPicker");
+        d.setTitle("Change quantity");
         d.setContentView(R.layout.dialog_get_quantity);
         Button b2 = (Button) d.findViewById(R.id.btnDialogCancel);
         Button b1 = (Button) d.findViewById(R.id.btnDialogOkay);
@@ -103,7 +107,7 @@ public class BasketListRecyclerViewAdapter extends RecyclerView.Adapter<BasketLi
         });
         d.show();
 
-
     }
+
 
 }

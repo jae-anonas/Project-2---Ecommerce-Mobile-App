@@ -10,17 +10,20 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class BasketActivity extends AppCompatActivity implements View.OnClickListener, BasketListRecyclerViewAdapter.OnChangeQuantityListener{
     RecyclerView mRecyclerView;
-    Button btnBack, btnCheckOut;
+    Button btnBack, btnCheckOut, btnRemoveAll;
     BasketListRecyclerViewAdapter adapter;
     UserBasket basket;
 
@@ -40,9 +43,12 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
 
         btnBack = (Button) findViewById(R.id.btnGoBack);
         btnCheckOut = (Button) findViewById(R.id.btnCheckout);
+        btnRemoveAll = (Button) findViewById(R.id.btnClearAll);
 
         btnBack.setOnClickListener(this);
         btnCheckOut.setOnClickListener(this);
+        btnRemoveAll.setOnClickListener(this);
+
         btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
                 UserBasket.getInstance().getTotalBill()));
 
@@ -90,6 +96,35 @@ public class BasketActivity extends AppCompatActivity implements View.OnClickLis
                     getCheckoutCheckDialog().create().show();
 
                 }
+                break;
+            case R.id.btnClearAll:
+                if (basket.mFoodItemList.size() == 0){
+                    Toast.makeText(this, "You don't have any items in your basket.", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                final List<FoodInBasket> temp = new LinkedList<>(basket.mFoodItemList);
+                Log.i("iiiiiiiiiiii", temp.size() + "  okay");
+                basket.mFoodItemList.clear();
+                adapter.notifyItemRangeRemoved(0, temp.size());
+                btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                        UserBasket.getInstance().getTotalBill()));
+
+                Snackbar.make(mRecyclerView,"Removed all items from basket.", Snackbar.LENGTH_LONG).
+                        setAction("Undo", new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                basket.mFoodItemList = temp;
+                                adapter.setFoodItemList(basket.mFoodItemList);
+                                Log.i("iiiiiiiiiiii", temp.size() + " not okay");
+                                adapter.notifyItemRangeInserted(0, basket.mFoodItemList.size());
+                                btnCheckOut.setText(String.format(Locale.ENGLISH, "CHECKOUT($%d)",
+                                        UserBasket.getInstance().getTotalBill()));
+                            }
+
+                        })
+                        .show();
+                adapter.notifyDataSetChanged();
                 break;
 
         }

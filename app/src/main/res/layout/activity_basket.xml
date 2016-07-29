@@ -18,11 +18,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/imgBtnAddToCart"
+                <!--<ImageView-->
+                    <!--android:id="@+id/imgBtnAddToCart"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@drawable/add_to_shopping_basket"-->
+                    <!--android:layout_gravity="end|center_vertical"-->
+                    <!--android:paddingRight="15dp"-->
+                    <!--android:paddingEnd="15dp"-->
+                    <!--/>-->
+                <Button
+                    android:id="@+id/btnClearAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/add_to_shopping_basket"
+                    android:text="Remove All"
+                    android:background="?android:attr/selectableItemBackground"
                     android:layout_gravity="end|center_vertical"
                     android:paddingRight="15dp"
                     android:paddingEnd="15dp"
